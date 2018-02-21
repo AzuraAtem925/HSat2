@@ -1,24 +1,29 @@
-'''Imports altemose data as dictionary. Key= sequence. Value= probability is
-in a read.'''
+"""
+These functions are for file loading
+"""
 import numpy as np
+from Bio import SeqIO
 
-def load_probs(filepath):
+"""
+Load in the 24mer.txt file
+"""
+def load_mers(filepath):
     file= open(filepath,"r")
-    pdic={}
+    mers={}
     lis = file.readlines()
     del lis[0]
     for n in range(len(lis)):
-        sdic = {}
         lis[n] = lis[n].rstrip()
         lis[n] = lis[n].split()
         mer = lis[n][0]
         fam = lis[n][1]
-        prob = lis[n][2]
-        sdic[fam] = prob
-        pdic[mer] = sdic
+        prob = float(lis[n][2])
+        mers[mer] = [fam,prob]
     file.close
-    return pdic
-
+    return mers
+"""
+Loads in the file with subfamilies and background prob
+"""
 def load_subfamilies(filepath):
     file= open(filepath,"r")
     subfamilies={}
@@ -38,3 +43,9 @@ def load_subfamilies(filepath):
         subfamilies[fams[n]] = [nums[n]/total,consensus[n]]
     file.close
     return subfamilies
+"""
+Loads the fasta file into a biopython seqrecored object
+"""
+def load_reads(filepath):
+    reads = SeqIO.parse(open(filepath),'fasta')
+    return reads
